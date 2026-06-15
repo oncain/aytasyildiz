@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Y T A Ş &nbsp; Y I L D I Z</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;500&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory:  '#fcfbfa',
+            cream:  '#f2ede6',
+            warm:   '#e8e4df',
+            gold:   '#c8a96e',
+            ink:    '#111111',
+            smoke:  '#5a5a5a',
+          },
+          fontFamily: {
+            cinzel:     ['Cinzel', 'serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
+          },
+          letterSpacing: {
+            widest2: '0.35em',
+            widest3: '0.55em',
+          },
+          transitionDuration: {
+            800: '800ms',
+            1200: '1200ms',
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    /* ─── Global reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #0b1628; color: #e8e0d4; font-family: 'Montserrat', sans-serif; font-weight: 200; overflow-x: hidden; }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 2px; }
+    ::-webkit-scrollbar-track { background: #0b1628; }
+    ::-webkit-scrollbar-thumb { background: #c8a96e; }
+
+    /* ─── Nav ─── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transition: background 0.6s ease, border-color 0.6s ease;
+      background: rgba(11,22,40,0.0);
+      border-bottom: 1px solid rgba(255,255,255,0);
+    }
+    #navbar.scrolled {
+      background: rgba(8,16,32,0.96);
+      border-bottom: 1px solid #1a2d4a;
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 300;
+      letter-spacing: 0.5em;
+      font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+      color: #fff;
+      transition: color 0.6s;
+    }
+    #navbar.scrolled .nav-logo { color: #e8e0d4; }
+    .nav-link {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 100;
+      letter-spacing: 0.25em;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 1px; background: currentColor;
+      transform: scaleX(0); transform-origin: center;
+      transition: transform 0.4s ease;
+    }
+    .nav-link:hover::after { transform: scaleX(1); }
+    .nav-link:hover { color: #fff; }
+    #navbar.scrolled .nav-link { color: rgba(200,185,160,0.6); }
+    #navbar.scrolled .nav-link:hover { color: #e8e0d4; }
+    .nav-cta {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 200;
+      letter-spacing: 0.2em;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.45);
+      color: #fff;
+      padding: 6px 16px;
+      transition: all 0.3s;
+    }
+    .nav-cta:hover { background: #fff; color: #111; border-color: #fff; }
+    #navbar.scrolled .nav-cta { border-color: #c8a96e; color: #c8a96e; }
+    #navbar.scrolled .nav-cta:hover { background: #c8a96e; color: #0b1628; border-color: #c8a96e; }
+
+    /* ─── Hero ─── */
+    .hero-section {
+      position: relative; width: 100%; height: 100vh; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-img {
+      position: absolute; inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?q=80&w=1200');
+      background-size: cover; background-position: center;
+      filter: grayscale(20%) contrast(1.08) brightness(0.45) hue-rotate(200deg) saturate(0.6);
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+    .hero-img.loaded { transform: scale(1.0); }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(5,14,28,0.25) 0%, rgba(5,14,28,0.55) 60%, rgba(5,14,28,0.85) 100%);
+    }
+    .hero-content { position: relative; text-align: center; padding: 0 24px; }
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif; font-weight: 100;
+      letter-spacing: 0.55em; font-size: 0.6rem;
+      color: #c8a96e; text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero-title {
+      font-family: 'Cinzel', serif; font-weight: 300;
+      font-size: clamp(3rem, 10vw, 8rem);
+      color: #ffffff; line-height: 1;
+      letter-spacing: 0.12em;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.8s forwards;
+    }
+    .hero-subtitle {
+      font-family: 'Montserrat', sans-serif; font-weight: 100;
+      font-size: clamp(0.7rem, 1.4vw, 0.88rem);
+      color: rgba(255,255,255,0.72);
+      letter-spacing: 0.08em; line-height: 2;
+      max-width: 520px; margin: 2.5rem auto;
+      opacity: 0; animation: fadeUp 1s 1.2s forwards;
+    }
+    .hero-btn {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif; font-weight: 200;
+      font-size: 0.62rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: #fff; border: 1px solid rgba(255,255,255,0.55);
+      padding: 14px 42px;
+      transition: all 0.4s ease;
+      opacity: 0; animation: fadeUp 1s 1.6s forwards;
+    }
+    .hero-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; letter-spacing: 0.45em; }
+
+    /* ─── Scroll indicator ─── */
+    .scroll-indicator {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.4); font-family: 'Montserrat', sans-serif;
+      font-size: 0.5rem; letter-spacing: 0.4em; text-transform: uppercase;
+      animation: fadeUp 1s 2s forwards; opacity: 0;
+    }
+    .scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, rgba(200,169,110,0.8), transparent);
+      animation: scrollPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* ─── Animations ─── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-32px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(32px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* ─── Gold divider ─── */
+    .gold-line { width: 40px; height: 1px; background: #c8a96e; }
+
+    /* ─── Philosophy section ─── */
+    .philosophy-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(40%) contrast(1.05);
+      transition: filter 0.8s ease, transform 1.2s ease;
+    }
+    .philosophy-img:hover { filter: grayscale(10%) contrast(1.1); transform: scale(1.03); }
+
+    /* ─── Collection cards ─── */
+    .coll-card {
+      position: relative; overflow: hidden;
+      aspect-ratio: 2/3; cursor: pointer;
+    }
+    .coll-img {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      filter: grayscale(45%) contrast(1.08) brightness(0.85);
+      transition: transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.8s ease;
+    }
+    .coll-card:hover .coll-img {
+      transform: scale(1.06);
+      filter: grayscale(20%) contrast(1.1) brightness(0.9);
+    }
+    .coll-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(4,12,28,0.92) 0%, rgba(4,12,28,0.15) 55%, transparent 100%);
+    }
+    .coll-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 2.5rem 2rem;
+    }
+    .coll-label {
+      font-family: 'Montserrat', sans-serif; font-weight: 100;
+      font-size: 0.55rem; letter-spacing: 0.45em; color: #c8a96e;
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .coll-title {
+      font-family: 'Cinzel', serif; font-weight: 400;
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      color: #fff; letter-spacing: 0.1em; margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .coll-desc {
+      font-family: 'Montserrat', sans-serif; font-weight: 100;
+      font-size: 0.65rem; color: rgba(255,255,255,0.6);
+      letter-spacing: 0.05em; line-height: 1.8; margin-bottom: 1.5rem;
+    }
+    .coll-link {
+      font-family: 'Montserrat', sans-serif; font-weight: 200;
+      font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      display: inline-flex; align-items: center; gap: 12px;
+      transition: color 0.3s, gap 0.4s;
+    }
+    .coll-link::after { content: '→'; font-size: 0.7rem; }
+    .coll-card:hover .coll-link { color: #c8a96e; gap: 18px; }
+
+    /* ─── Stats ─── */
+    .stat-num {
+      font-family: 'Cinzel', serif; font-weight: 300;
+      font-size: clamp(3rem, 6vw, 5rem);
+      color: #111; line-height: 1; letter-spacing: -0.02em;
+    }
+
+    /* ─── Form ─── */
+    .form-input {
+      width: 100%; background: transparent;
+      border: none; border-bottom: 1px solid #c8a96e;
+      padding: 14px 0 10px;
+      font-family: 'Montserrat', sans-serif; font-weight: 200;
+      font-size: 0.78rem; letter-spacing: 0.12em; color: #e8e0d4;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-input::placeholder { color: rgba(150,170,200,0.45); letter-spacing: 0.2em; font-size: 0.65rem; }
+    .form-input:focus { border-bottom-color: #c8a96e; }
+    .form-select {
+      width: 100%; background: transparent;
+      border: none; border-bottom: 1px solid #c8a96e;
+      padding: 14px 0 10px;
+      font-family: 'Montserrat', sans-serif; font-weight: 200;
+      font-size: 0.78rem; letter-spacing: 0.12em; color: rgba(200,185,160,0.6);
+      outline: none; cursor: pointer; appearance: none;
+      transition: border-color 0.3s;
+    }
+    .form-select:focus { border-bottom-color: #c8a96e; color: #e8e0d4; }
+    .rsvp-btn {
+      font-family: 'Montserrat', sans-serif; font-weight: 200;
+      font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: #c8a96e; border: 1px solid #c8a96e;
+      padding: 16px 52px;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+    .rsvp-btn:hover { background: #c8a96e; color: #060e1c; letter-spacing: 0.5em; }
+
+    /* ─── Footer ─── */
+    .footer-link {
+      font-family: 'Montserrat', sans-serif; font-weight: 100;
+      font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      transition: color 0.3s;
+    }
+    .footer-link:hover { color: #c8a96e; }
+
+    /* ─── Responsive nav ─── */
+    @media (max-width: 768px) {
+      .nav-links-center { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════ -->
+  <nav id="navbar" class="w-full py-5 px-8 md:px-16">
+    <div class="flex items-center justify-between">
+
+      <!-- Sol: Ücretsiz Deneme (md'de görünür) -->
+      <div class="hidden md:block w-40">
+        <a href="#rezervasyon" class="nav-cta text-xs tracking-widest">Ücretsiz Deneme</a>
+      </div>
+
+      <!-- Merkez: Logo + Menü -->
+      <div class="flex-1 flex flex-col items-center">
+        <a href="#" class="nav-logo mb-3 block">A Y T A Ş &nbsp;&nbsp; Y I L D I Z</a>
+        <div class="nav-links-center flex items-center gap-10">
+          <a href="#koleksiyon" class="nav-link">La Collection</a>
+          <a href="#ozel-dersler" class="nav-link">Özel Dersler</a>
+          <a href="#felsefe" class="nav-link">Felsefemiz</a>
+          <a href="#rezervasyon" class="nav-link">Rezervasyon</a>
+        </div>
+      </div>
+
+      <!-- Sağ: boşluk dengeleyici -->
+      <div class="hidden md:block w-40 flex justify-end">
+        <span class="block w-5 h-px bg-white opacity-40 ml-auto mt-1"></span>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════ -->
+  <section class="hero-section" id="hero">
+    <div class="hero-img" id="heroImg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">İstanbul &nbsp;·&nbsp; 2024 Koleksiyonu</p>
+      <h1 class="hero-title">GÜÇ VE<br>ZARAFET</h1>
+      <p class="hero-subtitle">
+        Dövüş sanatının disiplinini, yüksek yaşam stiliyle buluşturuyoruz.<br>
+        İstanbul'un en seçkin kick boks deneyimi.
+      </p>
+      <a href="#koleksiyon" class="hero-btn">Deneyimle</a>
+    </div>
+    <div class="scroll-indicator">
+      <span>Keşfet</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       FELSEFEMİZ
+  ════════════════════════════════════════ -->
+  <section id="felsefe" class="py-28 md:py-40 px-8 md:px-16 lg:px-28" style="background:#0f1e35;">
+    <div class="grid md:grid-cols-2 gap-20 md:gap-32 items-center">
+
+      <!-- Görsel -->
+      <div class="reveal-left" style="height: clamp(420px, 65vh, 700px);">
+        <div style="height:100%; overflow:hidden;">
+          <img
+            src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=600"
+            alt="Kick boks antrenman"
+            class="philosophy-img"
+            style="height:100%; width:100%;"
+          />
+        </div>
+      </div>
+
+      <!-- Metin -->
+      <div class="reveal-right flex flex-col justify-center">
+        <p class="font-montserrat font-light text-gold tracking-widest text-xs uppercase mb-10">
+          The House Philosophy
+        </p>
+        <div class="gold-line mb-10"></div>
+        <h2 class="font-cinzel font-light mb-10" style="color:#e8e0d4;"
+            style="font-size: clamp(1.6rem, 3.5vw, 2.8rem); line-height:1.35; letter-spacing:0.06em;">
+          Beden ve Zihnin<br>Yüksek Uyumu
+        </h2>
+        <p class="font-montserrat font-thin leading-loose mb-7" style="color:#8fa8c8; font-size:0.8rem; letter-spacing:0.06em;"
+           style="font-size: 0.8rem; letter-spacing:0.06em;">
+          Kick boks sadece bir spor değil; beden ve zihnin yüksek uyumudur.
+          Her teknik, her ritim, her nefes — içinizdeki potansiyeli keşfetmenin
+          titizlikle işlenmiş bir yoludur.
+        </p>
+        <p class="font-montserrat font-thin leading-loose mb-14" style="color:#8fa8c8; font-size:0.8rem; letter-spacing:0.06em;"
+           style="font-size: 0.8rem; letter-spacing:0.06em;">
+          Aytaş Yıldız atölyesinde antrenman yapmak; seçkin bir zanaatkârın
+          elinden çıkan bir eserle temas kurmak gibidir. Ham gücü, bilinçli
+          bir zarâfete dönüştüren bu deneyimi yalnızca az sayıda kişiyle paylaşıyoruz.
+        </p>
+        <a href="#rezervasyon"
+           class="font-montserrat font-thin text-xs tracking-widest uppercase inline-flex items-center gap-4 transition-all duration-500" style="color:#c8a96e; display:inline-flex; align-items:center; gap:16px;">
+          Randevu Talep Et <span>→</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       İSTATİSTİKLER — aralayıcı şerit
+  ════════════════════════════════════════ -->
+  <section class="py-24 px-8 md:px-16" style="background:#060e1c;">
+    <div class="max-w-4xl mx-auto grid grid-cols-3 gap-8 text-center">
+      <div class="reveal" style="transition-delay:0s;">
+        <div class="stat-num" style="color:#e8e0d4;">12</div>
+        <div class="gold-line mx-auto my-4"></div>
+        <p class="font-montserrat font-thin text-warm tracking-widest uppercase"
+           style="font-size:0.58rem; letter-spacing:0.3em;">Yıllık Deneyim</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s;">
+        <div class="stat-num" style="color:#e8e0d4;">340+</div>
+        <div class="gold-line mx-auto my-4"></div>
+        <p class="font-montserrat font-thin text-warm tracking-widest uppercase"
+           style="font-size:0.58rem; letter-spacing:0.3em;">Mezun Sporcu</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.3s;">
+        <div class="stat-num" style="color:#e8e0d4;">18</div>
+        <div class="gold-line mx-auto my-4"></div>
+        <p class="font-montserrat font-thin text-warm tracking-widest uppercase"
+           style="font-size:0.58rem; letter-spacing:0.3em;">Şampiyonluk</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       KOLEKSIYON / DERSLER
+  ════════════════════════════════════════ -->
+  <section id="koleksiyon" class="py-28 md:py-40 px-8 md:px-16 lg:px-28" style="background:#0f1e35;">
+
+    <div class="text-center mb-20 reveal">
+      <p class="font-montserrat font-thin text-gold tracking-widest text-xs uppercase mb-5">
+        La Collection
+      </p>
+      <h2 class="font-cinzel font-light" style="color:#e8e0d4;"
+          style="font-size:clamp(1.6rem,3.5vw,2.8rem); letter-spacing:0.1em;">
+        Antrenman Koleksiyonu
+      </h2>
+    </div>
+
+    <!-- 3 Kart -->
+    <div class="grid md:grid-cols-3 gap-4 md:gap-6" id="ozel-dersler">
+
+      <!-- Kart 1 -->
+      <div class="coll-card reveal" style="transition-delay:0s;">
+        <div class="coll-img"
+             style="background-image:url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=500');"></div>
+        <div class="coll-overlay"></div>
+        <div class="coll-content">
+          <p class="coll-label">Grup Kick Box</p>
+          <h3 class="coll-title">II Classico</h3>
+          <p class="coll-desc">Ritim, teknik ve kolektif enerji.<br>Birlikte yükselmek için tasarlandı.</p>
+          <a href="#rezervasyon" class="coll-link">Keşfet</a>
+        </div>
+      </div>
+
+      <!-- Kart 2 -->
+      <div class="coll-card reveal" style="transition-delay:0.15s;">
+        <div class="coll-img"
+             style="background-image:url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=500');"></div>
+        <div class="coll-overlay"></div>
+        <div class="coll-content">
+          <p class="coll-label">Personal Training</p>
+          <h3 class="coll-title">Privé</h3>
+          <p class="coll-desc">Tamamen size özel, terzi işi<br>birebir antrenman programı.</p>
+          <a href="#rezervasyon" class="coll-link">Keşfet</a>
+        </div>
+      </div>
+
+      <!-- Kart 3 -->
+      <div class="coll-card reveal" style="transition-delay:0.3s;">
+        <div class="coll-img"
+             style="background-image:url('https://images.unsplash.com/photo-1509563268479-0f004cf3f58b?q=80&w=500');"></div>
+        <div class="coll-overlay"></div>
+        <div class="coll-content">
+          <p class="coll-label">Boks & Refleks</p>
+          <h3 class="coll-title">L'Arte della Difesa</h3>
+          <p class="coll-desc">Saf boks teknikleri ve<br>zihinsel odaklanma sanatı.</p>
+          <a href="#rezervasyon" class="coll-link">Keşfet</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       ALINTI / EDITORIAL BREAK
+  ════════════════════════════════════════ -->
+  <section class="py-28 md:py-40 px-8 md:px-16 text-center" style="background:#0d1a2e;">
+    <div class="max-w-2xl mx-auto reveal">
+      <div class="gold-line mx-auto mb-12"></div>
+      <blockquote class="font-cinzel font-light mb-8" style="color:#e8e0d4;"
+                  style="font-size:clamp(1.2rem,2.8vw,2rem); line-height:1.7; letter-spacing:0.06em;">
+        "Şampiyonlar yenilgiyi kabullenmeyi değil,<br>
+        yenilgiden öğrenmeyi bilir."
+      </blockquote>
+      <p class="font-montserrat font-thin tracking-widest text-xs uppercase" style="color:#7a9ab8;">
+        — Aytaş Yıldız, Baş Antrenör
+      </p>
+      <div class="gold-line mx-auto mt-12"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       REZERVASYON — RSVP
+  ════════════════════════════════════════ -->
+  <section id="rezervasyon" class="py-28 md:py-44 px-8 md:px-16 lg:px-28" style="background:#0f1e35;">
+    <div class="max-w-xl mx-auto text-center">
+
+      <div class="reveal">
+        <p class="font-montserrat font-thin text-gold tracking-widest text-xs uppercase mb-5">
+          Rezervasyon
+        </p>
+        <h2 class="font-cinzel font-light mb-3" style="color:#e8e0d4;"
+            style="font-size:clamp(1.6rem,3.5vw,2.8rem); letter-spacing:0.1em;">
+          R.S.V.P.
+        </h2>
+        <p class="font-montserrat font-thin text-xs tracking-widest mb-16" style="color:#6a8aaa; letter-spacing:0.12em;"
+           style="letter-spacing:0.12em;">
+          İlk adımınızı atın. Atelye size gelsin.
+        </p>
+      </div>
+
+      <form id="rsvpForm" class="space-y-10 reveal" onsubmit="sendWhatsApp(event)">
+
+        <div class="text-left">
+          <label class="font-montserrat font-thin text-xs tracking-widest uppercase block mb-1" style="font-size:0.52rem; color:#7a9ab8;"
+                 style="font-size:0.52rem;">İsim Soyisim</label>
+          <input type="text" id="rsvpName" class="form-input" placeholder="Adınızı giriniz" required />
+        </div>
+
+        <div class="text-left">
+          <label class="font-montserrat font-thin text-xs tracking-widest uppercase block mb-1" style="font-size:0.52rem; color:#7a9ab8;"
+                 style="font-size:0.52rem;">Telefon</label>
+          <input type="tel" id="rsvpPhone" class="form-input" placeholder="+90 5__ ___ __ __" required />
+        </div>
+
+        <div class="text-left">
+          <label class="font-montserrat font-thin text-xs tracking-widest uppercase block mb-1" style="font-size:0.52rem; color:#7a9ab8;"
+                 style="font-size:0.52rem;">Tercih Edilen Saat</label>
+          <select id="rsvpTime" class="form-select" required>
+            <option value="" disabled selected>Saat seçiniz</option>
+            <option>07:00 – 09:00  (Sabah Seansı)</option>
+            <option>10:00 – 12:00  (Öğleden Önce)</option>
+            <option>13:00 – 15:00  (Öğle Seansı)</option>
+            <option>17:00 – 19:00  (Akşam Seansı)</option>
+            <option>19:00 – 21:00  (Gece Seansı)</option>
+          </select>
+        </div>
+
+        <div class="pt-6">
+          <button type="submit" class="rsvp-btn">Randevu Talep Et</button>
+        </div>
+
+      </form>
+
+      <!-- Başarı mesajı -->
+      <div id="successMsg" class="hidden mt-12 text-center reveal">
+        <div class="gold-line mx-auto mb-6"></div>
+        <p class="font-cinzel font-light text-sm tracking-widest" style="color:#e8e0d4;">
+          Talebiniz iletildi.
+        </p>
+        <p class="font-montserrat font-thin text-xs mt-3 tracking-wider" style="color:#7a9ab8;">
+          En kısa sürede sizinle iletişime geçeceğiz.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════ -->
+  <footer class="py-20 px-8 md:px-16" style="background:#060e1c;">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Logo -->
+      <div class="text-center mb-14">
+        <p class="font-cinzel font-light tracking-widest" style="color:#e8e0d4;"
+           style="font-size:0.78rem; letter-spacing:0.5em;">
+          A Y T A Ş &nbsp;&nbsp; Y I L D I Z
+        </p>
+        <div class="gold-line mx-auto mt-4"></div>
+      </div>
+
+      <!-- Linkler -->
+      <div class="flex flex-wrap justify-center gap-x-10 gap-y-4 mb-14">
+        <a href="#koleksiyon" class="footer-link">La Collection</a>
+        <a href="#ozel-dersler" class="footer-link">Özel Dersler</a>
+        <a href="#felsefe" class="footer-link">Felsefemiz</a>
+        <a href="#rezervasyon" class="footer-link">Rezervasyon</a>
+        <a href="https://wa.me/905000000000" target="_blank" class="footer-link">WhatsApp</a>
+        <a href="#" class="footer-link">Instagram</a>
+      </div>
+
+      <!-- Adres & Hukuki -->
+      <div class="text-center">
+        <p class="font-montserrat font-thin text-xs tracking-widest opacity-50 mb-2" style="color:#6a8aaa;"
+           style="font-size:0.56rem; letter-spacing:0.28em;">
+          İstanbul &nbsp;·&nbsp; Türkiye
+        </p>
+        <p class="font-montserrat font-thin text-xs tracking-widest opacity-40" style="color:#5a7a9a;"
+           style="font-size:0.52rem; letter-spacing:0.22em;">
+          © 2024 Aytaş Yıldız. Tüm hakları saklıdır.
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════════════════
+       JAVASCRIPT
+  ════════════════════════════════════════ -->
+  <script>
+    /* ── Navbar scroll ── */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    /* ── Hero image ken-burns ── */
+    window.addEventListener('load', () => {
+      document.getElementById('heroImg').classList.add('loaded');
+    });
+
+    /* ── Intersection Observer: reveal ── */
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    /* ── WhatsApp RSVP ── */
+    function sendWhatsApp(e) {
+      e.preventDefault();
+      const name  = document.getElementById('rsvpName').value.trim();
+      const phone = document.getElementById('rsvpPhone').value.trim();
+      const time  = document.getElementById('rsvpTime').value;
+
+      if (!name || !phone || !time) return;
+
+      const message = encodeURIComponent(
+        `🥊 *AYTAŞ YILDIZ — Yeni Rezervasyon Talebi*\n\n` +
+        `*İsim:* ${name}\n` +
+        `*Telefon:* ${phone}\n` +
+        `*Tercih Edilen Saat:* ${time}\n\n` +
+        `_Bu talep web sitesi üzerinden gönderilmiştir._`
+      );
+
+      /* Salon WhatsApp numaranızı buraya girin */
+      const waNumber = '905000000000';
+      window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
+
+      /* Formu gizle, teşekkür göster */
+      document.getElementById('rsvpForm').style.display = 'none';
+      const msg = document.getElementById('successMsg');
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('visible'), 50);
+    }
+  </script>
+
+</body>
+</html>
